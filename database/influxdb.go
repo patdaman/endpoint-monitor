@@ -179,7 +179,7 @@ func (influxDb InfluxDb) GetMeanResponseTime(Url string, span int) (float64, err
 		return 0, err
 	}
 
-	//Retrive the last record
+	// Retrive the last record
 	noOfRows := len(res[0].Series[0].Values)
 	fmt.Println(q)
 	if noOfRows != 0 {

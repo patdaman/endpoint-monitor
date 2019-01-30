@@ -11,9 +11,9 @@ import (
 	"time"
 
 	"github.com/codegangsta/cli"
-	"github.com/patdaman/statusok/database"
-	"github.com/patdaman/statusok/notify"
-	"github.com/patdaman/statusok/requests"
+	"github.com/patdaman/endpoint-monitor/database"
+	"github.com/patdaman/endpoint-monitor/notify"
+	"github.com/patdaman/endpoint-monitor/requests"
 )
 
 type configParser struct {

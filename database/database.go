@@ -161,7 +161,6 @@ func AddRequestInfo(requestInfo RequestInfo) {
 	if meanErr == nil {
 		if mean > requestInfo.ExpectedResponseTime {
 			clearQueue(requestInfo.Id)
-			//TODO: error retry exponential?
 			notify.SendResponseTimeNotification(notify.ResponseTimeNotification{
 				Url:                  requestInfo.Url,
 				RequestType:          requestInfo.RequestType,
