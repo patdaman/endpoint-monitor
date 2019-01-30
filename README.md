@@ -93,4 +93,4 @@ Adding support to other clients is simple.[view details](https://github.com/patd
 ## Contribution
 
 Contributions are welcomed and greatly appreciated. Create an issue if you find bugs.
-Send a pull request if you have written a new feature or fixed an issue .Please make sure to write test cases.
+Send a pull request if you have written a new feature or fixed an issue. Please make sure to write test cases!
