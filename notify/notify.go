@@ -24,11 +24,11 @@ type ResponseTimeNotification struct {
 }
 
 type ErrorNotification struct {
-	Url          string
-	RequestType  string
-	ResponseBody string
-	Error        string
-	OtherInfo    string
+	Url         string
+	RequestType string
+	Error       string
+	OtherInfo   string
+	// ResponseBody string
 }
 
 type ResponseCodeNotification struct {
@@ -125,7 +125,8 @@ func SendTestNotification() {
 			println("Sent Test Response Time notification to ", value.GetClientName(), ". Make sure you received it")
 		}
 
-		err1 := value.SendErrorNotification(ErrorNotification{"http://test.com", "GET", "This is test notification", "Test notification", "test"})
+		// err1 := value.SendErrorNotification(ErrorNotification{"http://test.com", "GET", "This is test notification", "Test notification", "test"})
+		err1 := value.SendErrorNotification(ErrorNotification{"http://test.com", "GET", "This is test notification", "Test notification"})
 
 		if err1 != nil {
 			println("Failed to Send Error notification to ", value.GetClientName(), " Please check the details entered in the config file")
@@ -171,8 +172,10 @@ func getMessageFromErrorNotification(errorNotification ErrorNotification) string
 
 	message := fmt.Sprintf("Notification From Endpoint Monitor\n\nWe are getting error when we try to send request to one of your apis"+
 		"\n\nPlease find the Details below"+
-		"\n\nUrl: %v \nRequestType: %v \nError Message: %v \nResponse Body: %v\nOther Info:%v\n"+
-		"\n\nThanks", errorNotification.Url, errorNotification.RequestType, errorNotification.Error, errorNotification.ResponseBody, errorNotification.OtherInfo)
+		"\n\nUrl: %v \nRequestType: %v \nError Message: %v \nOther Info:%v\n"+
+		// "\n\nUrl: %v \nRequestType: %v \nError Message: %v \nResponse Body: %v\nOther Info:%v\n"+
+		// "\n\nThanks", errorNotification.Url, errorNotification.RequestType, errorNotification.Error, errorNotification.ResponseBody, errorNotification.OtherInfo)
+		"\n\nThanks", errorNotification.Url, errorNotification.RequestType, errorNotification.Error, errorNotification.OtherInfo)
 
 	return message
 }

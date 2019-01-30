@@ -195,9 +195,9 @@ func PerformRequest(requestConfig RequestConfig, throttle chan int) error {
 					Url:          requestConfig.Url,
 					RequestType:  requestConfig.RequestType,
 					ResponseCode: 0,
-					ResponseBody: "Unable to create Request object",
 					Reason:       database.ErrCreateRequest,
 					OtherInfo:    jsonErr.Error(),
+					// ResponseBody: "Unable to create Request object",
 				})
 
 				return jsonErr
@@ -229,9 +229,9 @@ func PerformRequest(requestConfig RequestConfig, throttle chan int) error {
 			Url:          requestConfig.Url,
 			RequestType:  requestConfig.RequestType,
 			ResponseCode: 0,
-			ResponseBody: "Unable to create Request object",
 			Reason:       database.ErrCreateRequest,
 			OtherInfo:    reqErr.Error(),
+			// ResponseBody: "Unable to create Request object",
 		})
 
 		return reqErr
@@ -272,9 +272,9 @@ func PerformRequest(requestConfig RequestConfig, throttle chan int) error {
 			Url:          requestConfig.Url,
 			RequestType:  requestConfig.RequestType,
 			ResponseCode: statusCode,
-			ResponseBody: convertResponseToString(getResponse),
 			Reason:       database.ErrDoRequest,
 			OtherInfo:    respErr.Error(),
+			// ResponseBody: convertResponseToString(getResponse),
 		})
 		return respErr
 	}
@@ -287,9 +287,9 @@ func PerformRequest(requestConfig RequestConfig, throttle chan int) error {
 			Url:          requestConfig.Url,
 			RequestType:  requestConfig.RequestType,
 			ResponseCode: getResponse.StatusCode,
-			ResponseBody: convertResponseToString(getResponse),
 			Reason:       errResposeCode(getResponse.StatusCode, requestConfig.ResponseCode),
 			OtherInfo:    "",
+			// ResponseBody: convertResponseToString(getResponse),
 		})
 		return errResposeCode(getResponse.StatusCode, requestConfig.ResponseCode)
 	}
@@ -302,9 +302,9 @@ func PerformRequest(requestConfig RequestConfig, throttle chan int) error {
 		Url:                  requestConfig.Url,
 		RequestType:          requestConfig.RequestType,
 		ResponseCode:         getResponse.StatusCode,
-		ResponseBody:         convertResponseToString(getResponse),
 		ResponseTime:         elapsed.Nanoseconds() / 1000000,
 		ExpectedResponseTime: requestConfig.ResponseTime,
+		// ResponseBody:         convertResponseToString(getResponse),
 	})
 
 	return nil

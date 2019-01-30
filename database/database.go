@@ -29,11 +29,11 @@ var (
 )
 
 type RequestInfo struct {
-	Id                   int
-	Url                  string
-	RequestType          string
-	ResponseCode         int
-	ResponseBody         string
+	Id           int
+	Url          string
+	RequestType  string
+	ResponseCode int
+	// ResponseBody         string
 	ResponseTime         int64
 	ExpectedResponseTime int64
 }
@@ -43,9 +43,9 @@ type ErrorInfo struct {
 	Url          string
 	RequestType  string
 	ResponseCode int
-	ResponseBody string
-	Reason       error
-	OtherInfo    string
+	// ResponseBody string
+	Reason    error
+	OtherInfo string
 }
 
 type Database interface {
@@ -123,9 +123,11 @@ func addTestErrorAndRequestInfo() {
 
 	println("Adding Test data to your database ....")
 
-	requestInfo := RequestInfo{0, "http://test.com", "GET", 0, "", 0, 0}
+	// requestInfo := RequestInfo{0, "http://test.com", "GET", 0, "", 0, 0}
+	requestInfo := RequestInfo{0, "http://test.com", "GET", 0, 0, 0}
 
-	errorInfo := ErrorInfo{0, "http://test.com", "GET", 0, "test response", errors.New("test error"), "test other info"}
+	// errorInfo := ErrorInfo{0, "http://test.com", "GET", 0, "test response", errors.New("test error"), "test other info"}
+	errorInfo := ErrorInfo{0, "http://test.com", "GET", 0, errors.New("test error"), "test other info"}
 
 	for _, db := range dbList {
 		reqErr := db.AddRequestInfo(requestInfo)
@@ -178,11 +180,12 @@ func AddErrorInfo(errorInfo ErrorInfo) {
 
 	// Request failed send notification
 	notify.SendErrorNotification(notify.ErrorNotification{
-		Url:          errorInfo.Url,
-		RequestType:  errorInfo.RequestType,
-		ResponseBody: errorInfo.ResponseBody,
-		Error:        errorInfo.Reason.Error(),
-		OtherInfo:    errorInfo.OtherInfo})
+		Url:         errorInfo.Url,
+		RequestType: errorInfo.RequestType,
+		Error:       errorInfo.Reason.Error(),
+		OtherInfo:   errorInfo.OtherInfo,
+		// ResponseBody: errorInfo.ResponseBody,
+	})
 
 	// Add Error information to database
 	for _, db := range dbList {
@@ -272,9 +275,9 @@ func logErrorInfo(errorInfo ErrorInfo) {
 			"url":          errorInfo.Url,
 			"requestType":  errorInfo.RequestType,
 			"responseCode": errorInfo.ResponseCode,
-			"responseBody": errorInfo.ResponseBody,
 			"reason":       errorInfo.Reason.Error(),
 			"otherInfo":    errorInfo.Reason,
+			// "responseBody": errorInfo.ResponseBody,
 		}).Error("Status Ok Error occurred for url " + errorInfo.Url)
 	}
 
@@ -289,8 +292,8 @@ func logRequestInfo(requestInfo RequestInfo) {
 			"requestType":          requestInfo.RequestType,
 			"responseCode":         requestInfo.ResponseCode,
 			"responseTime":         requestInfo.ResponseTime,
-			"responseBody":         requestInfo.ResponseBody,
 			"expectedResponseTime": requestInfo.ExpectedResponseTime,
+			// "responseBody":         requestInfo.ResponseBody,
 		}).Info("")
 	}
 }

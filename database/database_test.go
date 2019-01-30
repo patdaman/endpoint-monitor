@@ -49,9 +49,11 @@ func TestAddRequestAndErrorInfo(t *testing.T) {
 
 	Initialize(ids, 1, 10)
 
-	requestInfo := RequestInfo{1, "http://test.com", "GET", 200, "", 10, 200}
+	// requestInfo := RequestInfo{1, "http://test.com", "GET", 200, 10, 200, ""}
+	requestInfo := RequestInfo{1, "http://test.com", "GET", 200, 10, 200}
 
-	errorInfo := ErrorInfo{0, "http://test.com", "GET", 0, "test response", errors.New("test error"), "test other info"}
+	// errorInfo := ErrorInfo{0, "http://test.com", "GET", 0, errors.New("test error"), "test other info", "test response"}
+	errorInfo := ErrorInfo{0, "http://test.com", "GET", 0, errors.New("test error"), "test other info"}
 
 	AddErrorInfo(errorInfo)
 
