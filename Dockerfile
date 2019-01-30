@@ -1,4 +1,5 @@
-# Donot use this Dockerfile.This is not ready yet.
+# !!! Do not use	!!!
+#This is not ready
 
 # Start from a Debian image with the latest version of Go installed
 # and a workspace (GOPATH) configured at /go.
@@ -26,7 +27,7 @@ RUN service grafana-server start
 
 #how to connect to localhost inside ?? http://stackoverflow.com/questions/24319662/from-inside-of-a-docker-container-how-do-i-connect-to-the-localhost-of-the-mach
 
-ENTRYPOINT /go/bin/StatusOk --config /go/src/github.com/patdaman/endpoint-monitor/config.json
+ENTRYPOINT /go/bin/endpoint-monitor --config /go/src/github.com/patdaman/endpoint-monitor/config.json
 
 # Document that the service listens 
 EXPOSE 80 8083 8086 7321 3000

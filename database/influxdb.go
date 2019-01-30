@@ -197,7 +197,7 @@ func (influxDb InfluxDb) GetMeanResponseTime(Url string, span int) (float64, err
 			return 0, err2
 		}
 
-		fmt.Println("[%2d] %s: %03d\n", 1, t.Format(time.Stamp), val, err2)
+		fmt.Printf("[%2d] %s: %03f\n%v", 1, t.Format(time.Stamp), val, err2)
 		return val, nil
 	}
 	return 0, errors.New("error")

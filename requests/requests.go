@@ -30,6 +30,9 @@ const (
 	DefaultTime         = "300s"
 	DefaultResponseCode = http.StatusOK
 	DefaultConcurrency  = 1
+
+	AuthenticationRequired = http.StatusNetworkAuthenticationRequired
+	Unauthorized           = http.StatusUnauthorized
 )
 
 type RequestConfig struct {
@@ -45,12 +48,12 @@ type RequestConfig struct {
 	CheckEvery   time.Duration     `json:"checkEvery"`
 }
 
-//Set Id for request
+// Set Id for request
 func (requestConfig *RequestConfig) SetId(id int) {
 	requestConfig.Id = id
 }
 
-//check whether all requestConfig fields are valid
+// Check all request Config fields are valid
 func (requestConfig *RequestConfig) Validate() error {
 
 	if len(requestConfig.Url) == 0 {
@@ -81,11 +84,11 @@ func (requestConfig *RequestConfig) Validate() error {
 	return nil
 }
 
-//Initialize data from config file and check all requests
+// Initialize data from config file and check all requests
 func RequestsInit(data []RequestConfig, concurrency int) {
 	RequestsList = data
 
-	//throttle channel is used to limit number of requests performed at a time
+	// Throttle channel is used to limit number of concurrent requests
 	if concurrency == 0 {
 		throttle = make(chan int, DefaultConcurrency)
 	} else {
@@ -99,7 +102,7 @@ func RequestsInit(data []RequestConfig, concurrency int) {
 		os.Exit(3)
 	}
 	// Send requests to confirm all requests are valid
-	println("\nSending requests to apis.....making sure everything is right before we start monitoring")
+	println("\nSending requests to apis.....making sure endpoints are reachable and configuration is correct before monitoring")
 	println("Api Count: ", len(data))
 
 	for i, requestConfig := range data {
@@ -116,6 +119,7 @@ func RequestsInit(data []RequestConfig, concurrency int) {
 			println("Type :", requestConfig.RequestType)
 			println("Error Reason :", reqErr.Error())
 			println("\nPlease check the config file and try again")
+
 			os.Exit(3)
 		}
 	}
@@ -153,7 +157,7 @@ func createTicker(requestConfig RequestConfig) {
 // All tickers write to request channel
 func listenToRequestChannel() {
 
-	//throttle is used to limit number of requests executed at a time
+	// Throttle limits number of concurrent requests
 	for {
 		select {
 		case requect := <-requestChannel:
@@ -164,7 +168,7 @@ func listenToRequestChannel() {
 
 }
 
-// Uses date from requestConfig and creates and executes http request
+// Uses date from request Config and creates and executes http request
 func PerformRequest(requestConfig RequestConfig, throttle chan int) error {
 	// Remove value from throttel channel when request is completed
 	defer func() {
@@ -184,11 +188,8 @@ func PerformRequest(requestConfig RequestConfig, throttle chan int) error {
 
 	} else {
 		if requestConfig.Headers[ContentType] == JsonContentType {
-			// Create a request using using formParams
-
 			jsonBody, jsonErr := GetJsonParamsBody(requestConfig.FormParams)
 			if jsonErr != nil {
-				// Add Error to Database
 				go database.AddErrorInfo(database.ErrorInfo{
 					Id:           requestConfig.Id,
 					Url:          requestConfig.Url,
@@ -206,7 +207,6 @@ func PerformRequest(requestConfig RequestConfig, throttle chan int) error {
 				jsonBody)
 
 		} else {
-			// Create a request using formParams
 			formParams := GetUrlValues(requestConfig.FormParams)
 
 			request, reqErr = http.NewRequest(requestConfig.RequestType,
@@ -224,7 +224,6 @@ func PerformRequest(requestConfig RequestConfig, throttle chan int) error {
 	}
 
 	if reqErr != nil {
-		// Add Error to Database
 		go database.AddErrorInfo(database.ErrorInfo{
 			Id:           requestConfig.Id,
 			Url:          requestConfig.Url,
@@ -262,7 +261,6 @@ func PerformRequest(requestConfig RequestConfig, throttle chan int) error {
 	getResponse, respErr := client.Do(request)
 
 	if respErr != nil {
-		//Request failed . Add error info to database
 		var statusCode int
 		if getResponse == nil {
 			statusCode = 0
@@ -284,7 +282,6 @@ func PerformRequest(requestConfig RequestConfig, throttle chan int) error {
 	defer getResponse.Body.Close()
 
 	if getResponse.StatusCode != requestConfig.ResponseCode {
-		// Response code is not expected, add error to database
 		go database.AddErrorInfo(database.ErrorInfo{
 			Id:           requestConfig.Id,
 			Url:          requestConfig.Url,

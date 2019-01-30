@@ -14,64 +14,66 @@ With Endpoint Monitor you can monitor all your REST APIs by adding api details t
 
 ```json
 {
-	"url":"http://mywebsite.com/v1/data",
-	"requestType":"POST",
-	"headers":{
-		"Authorization":"Bearer ac2168444f4de69c27d6384ea2ccf61a49669be5a2fb037ccc1f",
-		"Content-Type":"application/json"
-	},
-	"formParams":{
-		"description":"test",
-		"url":"http://google.com"
-	},
-	"checkEvery":30,
-	"responseCode":200,		
-	"responseTime":800
+    "url":"http://mywebsite.com/v1/data",
+    "requestType":"POST",
+    "headers":{
+        "Authorization":"Bearer ac2168444f4de69c27d6384ea2ccf61a49669be5a2fb037ccc1f",
+        "Content-Type":"application/json"
+    },
+    "formParams":{
+        "description":"test",
+        "url":"http://google.com"
+    },
+    "checkEvery":30,
+    "responseCode":200,
+    "responseTime":800
 },
 
 {
-	"url":"http://mywebsite.com/v1/data",
-	"requestType":"GET",
-	"headers":{
-		"Authorization":"Bearer ac2168444f4de69c27d6384ea2ccf61a49669be5a2fb037ccc1f",		
-	},
-	"urlParams":{
-		"name":"endpoint-monitor"
-	},
-	"checkEvery":300,
-	"responseCode":200,		
-	"responseTime":800
+    "url":"http://mywebsite.com/v1/data",
+    "requestType":"GET",
+    "headers":{
+        "Authorization":"Bearer ac2168444f4de69c27d6384ea2ccf61a49669be5a2fb037ccc1f",        
+    },
+    "urlParams":{
+        "name":"endpoint-monitor"
+    },
+    "checkEvery":300,
+    "responseCode":200,
+    "responseTime":800
 },
 
 {
-	"url":"http://something.com/v1/data",
-	"requestType":"DELETE",
-	"formParams":{
-		"name":"endpoint-monitor"
-	},
-	"checkEvery":300,
-	"responseCode":200,		
-	"responseTime":800
+    "url":"http://something.com/v1/data",
+    "requestType":"DELETE",
+    "formParams":{
+        "name":"endpoint-monitor"
+    },
+    "checkEvery":300,
+    "responseCode":200,
+    "responseTime":800
 }
-
 ```
+
 [Guide to write config.json file](https://github.com/patdaman/endpoint-monitor/blob/master/Config.md#writing-a-config-file)
 
 [Sample config.json file](https://github.com/patdaman/endpoint-monitor/blob/master/sample_config.json)
 
 To run the app
 
-```
+```shell
 $ ./endpoint-monitor --config config.json &
 ```
 
 To run as background process add & at the end
 
+```shell
+$ ./endpoint-monitor --config config.json &
 ```
-$ ./endpoint-monitor --config config.json &	
-```
+
 to stop the process 
-```
+
+```shell
 $ jobs
 $ kill %jobnumber
 ```
@@ -86,7 +88,7 @@ Notifications will be triggered when mean response time is below given response 
 
 1. [Slack](https://github.com/patdaman/endpoint-monitor/blob/master/Config.md#slack)
 2. [Smtp Email](https://github.com/patdaman/endpoint-monitor/blob/master/Config.md#e-mail)
-4. [Http EndPoint](https://github.com/patdaman/endpoint-monitor/blob/master/Config.md#http-endpoint)
+3. [Http EndPoint](https://github.com/patdaman/endpoint-monitor/blob/master/Config.md#http-endpoint)
 
 Adding support to other clients is simple.[view details](https://github.com/patdaman/endpoint-monitor/blob/master/Config.md#write-your-own-notification-client)
 

@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/patdaman/statusok/notify"
+	"github.com/patdaman/endpoint-monitor/notify"
 )
 
 var (
@@ -163,10 +163,10 @@ func AddRequestInfo(requestInfo RequestInfo) {
 			clearQueue(requestInfo.Id)
 			//TODO: error retry exponential?
 			notify.SendResponseTimeNotification(notify.ResponseTimeNotification{
-				requestInfo.Url,
-				requestInfo.RequestType,
-				requestInfo.ExpectedResponseTime,
-				mean})
+				Url:                  requestInfo.Url,
+				RequestType:          requestInfo.RequestType,
+				ExpectedResponsetime: requestInfo.ExpectedResponseTime,
+				MeanResponseTime:     mean})
 		}
 	}
 
@@ -179,11 +179,11 @@ func AddErrorInfo(errorInfo ErrorInfo) {
 
 	// Request failed send notification
 	notify.SendErrorNotification(notify.ErrorNotification{
-		errorInfo.Url,
-		errorInfo.RequestType,
-		errorInfo.ResponseBody,
-		errorInfo.Reason.Error(),
-		errorInfo.OtherInfo})
+		Url:          errorInfo.Url,
+		RequestType:  errorInfo.RequestType,
+		ResponseBody: errorInfo.ResponseBody,
+		Error:        errorInfo.Reason.Error(),
+		OtherInfo:    errorInfo.OtherInfo})
 
 	// Add Error information to database
 	for _, db := range dbList {
