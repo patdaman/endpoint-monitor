@@ -10,10 +10,32 @@ import (
 
 // Diffrent types of clients to deliver notifications
 type NotificationTypes struct {
-	MailNotify MailNotify      `json:"mail"`
-	Slack      SlackNotify     `json:"slack"`
-	Http       HttpNotify      `json:"httpEndPoint"`
-	Pagerduty  PagerdutyNotify `json:"pagerduty"`
+	MailNotify MailNotify     `json:"mail"`
+	Slack      SlackNotify    `json:"slack"`
+	Http       HttpNotify     `json:"httpEndPoint"`
+	Opsgenie   OpsgenieNotify `json:"opsgenie"`
+}
+
+type Notification struct {
+	Notify               bool
+	Url                  string
+	NotificationType     string
+	RequestType          string
+	Environment          string
+	Priority             string
+	ExpectedResponseCode int64
+	ResponseCode         int64
+	ExpectedResponseTime int64
+	ExpectedResponseBody string
+	MeanResponseTime     int64
+	ResponseBody         string
+	Description          string
+	Message              string
+	Error                string
+	OtherInfo            string
+	Tags                 []string
+	Details              map[string]string
+	Note                 string
 }
 
 type ResponseTimeNotification struct {
@@ -38,16 +60,41 @@ type ResponseCodeNotification struct {
 	ResponseCode         int64
 }
 
+type ResponseBodyNotification struct {
+	Url                  string
+	RequestType          string
+	Environment          string
+	Priority             string
+	ExpectedResponseCode int64
+	ResponseCode         int64
+	ExpectedResponseBody string
+	ResponseBody         string
+}
+
 var (
 	errorCount        = 0
 	notificationsList []Notify
 )
 
+var (
+	ResponseTimeMessage = `json:"ResponseTime"`
+	ResponseCodeMessage = `json:"ResponseCode"`
+	ResponseBodyMessage = `json:"ResponseBody"`
+	CertMismatchMessage = `json:"CertMismatch"`
+	CertExpiringMessage = `json:"CertExpiring"`
+	CertExpiredMessage  = `json:"CertExpired"`
+	ErrorMessage        = `json:"Error"`
+	InformationMessage  = `json:"Information"`
+)
+
 type Notify interface {
 	GetClientName() string
 	Initialize() error
+	SendNotification(notification Notification) error
+
 	SendResponseTimeNotification(notification ResponseTimeNotification) error
-	// SendResponseCodeNotification(notification ResponseCodeNotification) error
+	SendResponseCodeNotification(notification ResponseCodeNotification) error
+	SendResponseBodyNotification(notification ResponseBodyNotification) error
 	SendErrorNotification(notification ErrorNotification) error
 }
 
@@ -80,6 +127,17 @@ func AddNew(notificationTypes NotificationTypes) {
 			println("Notifications :", value.GetClientName(), " Intialized")
 		}
 
+	}
+}
+
+// Format Notification type and send
+func SendNotification(notification Notification) {
+	for _, value := range notificationsList {
+		err := value.SendNotification(notification)
+		//TODO: exponential retry if fails ? what to do when error occurs ?
+		if err != nil {
+
+		}
 	}
 }
 
@@ -159,17 +217,18 @@ func isEmptyObject(objectString string) bool {
 // A readable message string from responseTimeNotification
 func getMessageFromResponseTimeNotification(responseTimeNotification ResponseTimeNotification) string {
 
-	message := fmt.Sprintf("Notification From Endpoint Monitor\n\nOne of your apis response time is below than expected."+
-		"\n\nPlease find the Details below"+
-		"\n\nUrl: %v \nRequestType: %v \nCurrent Average Response Time: %v ms\nExpected Response Time: %v ms\n"+
-		"\n\nThanks", responseTimeNotification.Url, responseTimeNotification.RequestType, responseTimeNotification.MeanResponseTime, responseTimeNotification.ExpectedResponsetime)
+	// message := fmt.Sprintf("Notification From Endpoint Monitor"+
+	// 	"\n\nAPI response is returning slower than expected."+
+	// 	"\n\nDetails below:"+
+	// 	"\n\nUrl: %v \nRequestType: %v \nCurrent Average Response Time: %v ms\nExpected Response Time: %v ms\n"+
+	// 	"\n\nThanks", responseTimeNotification.Url, responseTimeNotification.RequestType, responseTimeNotification.MeanResponseTime, responseTimeNotification.ExpectedResponsetime)
+	message := fmt.Sprintf(ResponseTimeMessage, responseTimeNotification.Url, responseTimeNotification.RequestType, responseTimeNotification.MeanResponseTime, responseTimeNotification.ExpectedResponsetime)
 
 	return message
 }
 
 // A readable message string from errorNotification
 func getMessageFromErrorNotification(errorNotification ErrorNotification) string {
-
 	message := fmt.Sprintf("Notification From Endpoint Monitor\n\nWe are getting error when we try to send request to one of your apis"+
 		"\n\nPlease find the Details below"+
 		"\n\nUrl: %v \nRequestType: %v \nError Message: %v \nOther Info:%v\n"+
@@ -178,4 +237,16 @@ func getMessageFromErrorNotification(errorNotification ErrorNotification) string
 		"\n\nThanks", errorNotification.Url, errorNotification.RequestType, errorNotification.Error, errorNotification.OtherInfo)
 
 	return message
+}
+
+// A readable subject string from Notification
+func getSubjectFromErrorNotification(notification Notification) string {
+	subject := fmt.Sprintf("Error returned from %v", notification.Url)
+	return subject
+}
+
+// A readable message string from errorNotification
+func getMessageFromNotification(notification Notification) string {
+	subject := fmt.Sprintf("Error returned from %v", notification.Url)
+	return subject
 }

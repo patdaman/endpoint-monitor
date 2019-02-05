@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/patdaman/endpoint-monitor/database"
@@ -38,10 +39,14 @@ const (
 type RequestConfig struct {
 	Id           int
 	Url          string            `json:"url"`
+	Environment  string            `json:"environment"`
+	Priority     string            `json:"priority"`
 	RequestType  string            `json:"requestType"`
 	Headers      map[string]string `json:"headers"`
 	FormParams   map[string]string `json:"formParams"`
 	UrlParams    map[string]string `json:"urlParams"`
+	Tags         []string          `json:"tags"`
+	Details      map[string]string `json:"details"`
 	ResponseCode int               `json:"responseCode"`
 	ResponseTime int64             `json:"responseTime"`
 	ResponseBody string            `json:"responseBody"`
@@ -359,6 +364,15 @@ func GetJsonParamsBody(params map[string]string) (io.Reader, error) {
 	}
 
 	return bytes.NewBuffer(data), nil
+}
+
+func GetCertificateInfo(w http.ResponseWriter, r *http.Request) {
+
+	if r.TLS != nil && len(r.TLS.PeerCertificates) > 0 {
+		cn := strings.ToLower(r.TLS.PeerCertificates[0].Subject.CommonName)
+		fmt.Printf("CN: %s", cn)
+	}
+
 }
 
 //creates an error when response code from server is not equal to response code mentioned in config file

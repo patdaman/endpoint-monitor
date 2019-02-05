@@ -9,7 +9,7 @@ func TestAddEmptyNotifyObject(t *testing.T) {
 	notificationTypes := NotificationTypes{MailNotify{},
 		SlackNotify{},
 		HttpNotify{},
-		PagerdutyNotify{}}
+		OpsgenieNotify{}}
 
 	AddNew(notificationTypes)
 
@@ -23,7 +23,7 @@ func TestAddValidNotifyObject(t *testing.T) {
 	notificationTypes := NotificationTypes{MailNotify{},
 		SlackNotify{},
 		HttpNotify{"http://statusOk.com", "GET", nil},
-		PagerdutyNotify{}}
+		OpsgenieNotify{}}
 
 	AddNew(notificationTypes)
 

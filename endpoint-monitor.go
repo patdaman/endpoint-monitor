@@ -35,7 +35,7 @@ func main() {
 	// Cli tool setup to get config file path from parameters
 	app := cli.NewApp()
 	app.Name = "Endpoint-Monitor"
-	app.Usage = "Monitor your website.  Send notifications when its down"
+	app.Usage = "Monitor http(s) endpoints. Send notifications in multiple formats."
 
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
@@ -130,7 +130,7 @@ func startMonitoring(configFileName string, logFileName string, test bool) {
 	}
 }
 
-// Currently just prints program is running
+// Prints program running
 func statusHandler(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "Endpoint Monitor is running \n Planning to display useful information in further releases")
 }

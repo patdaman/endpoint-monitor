@@ -163,10 +163,16 @@ func AddRequestInfo(requestInfo RequestInfo) {
 	if meanErr == nil {
 		if mean > requestInfo.ExpectedResponseTime {
 			clearQueue(requestInfo.Id)
-			notify.SendResponseTimeNotification(notify.ResponseTimeNotification{
+			// notify.SendResponseTimeNotification(notify.ResponseTimeNotification{
+			// 	Url:                  requestInfo.Url,
+			// 	RequestType:          requestInfo.RequestType,
+			// 	ExpectedResponsetime: requestInfo.ExpectedResponseTime,
+			// 	MeanResponseTime:     mean})
+			notify.SendNotification(notify.Notification{
 				Url:                  requestInfo.Url,
+				NotificationType:     "ResponseTime",
 				RequestType:          requestInfo.RequestType,
-				ExpectedResponsetime: requestInfo.ExpectedResponseTime,
+				ExpectedResponseTime: requestInfo.ExpectedResponseTime,
 				MeanResponseTime:     mean})
 		}
 	}
