@@ -1,0 +1,14 @@
+[Unit]
+Description=GO application to monitor urls defined in config
+After=influxdb.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=5
+User=QuestAdmin
+ExecStart=/home/QuestAdmin/work/bin/endpoint-monitor -config /etc/endpoint-monitor/quest-monitoring.json
+
+[Install]
+WantedBy=multi-user.target

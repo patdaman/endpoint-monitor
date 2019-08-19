@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/patdaman/endpoint-monitor/database"
+	database "github.com/patdaman/endpoint-monitor/metrics"
 )
 
 var (
@@ -165,9 +165,9 @@ func listenToRequestChannel() {
 	// Throttle limits number of concurrent requests
 	for {
 		select {
-		case requect := <-requestChannel:
+		case request := <-requestChannel:
 			throttle <- 1
-			go PerformRequest(requect, throttle)
+			go PerformRequest(request, throttle)
 		}
 	}
 

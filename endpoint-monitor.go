@@ -10,8 +10,9 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/codegangsta/cli"
-	"github.com/patdaman/endpoint-monitor/database"
+	"github.com/patdaman/endpoint-monitor/metrics"
 	"github.com/patdaman/endpoint-monitor/notify"
 	"github.com/patdaman/endpoint-monitor/requests"
 )
@@ -35,7 +36,9 @@ func main() {
 	// Cli tool setup to get config file path from parameters
 	app := cli.NewApp()
 	app.Name = "Endpoint-Monitor"
-	app.Usage = "Monitor http(s) endpoints. Send notifications in multiple formats."
+	app.Usage = "Monitor http(s) endpoints 
+	Save telemetry data to Influx DB 
+	Send notifications in multiple formats"
 
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
@@ -47,6 +50,10 @@ func main() {
 			Name:  "log",
 			Value: "",
 			Usage: "file to save logs",
+		},
+		cli.BoolFlag{
+			Name:  "notify",
+			Usage: "send notifications on alerts",
 		},
 		cli.BoolFlag{
 			Name:  "test",
@@ -70,7 +77,7 @@ func main() {
 			println("Reading File :", c.String("config"))
 
 			// Start monitoring when a valid file path is given
-			startMonitoring(c.String("config"), c.String("log"), c.Bool("test"))
+			startMonitoring(c.String("config"), c.String("log"), c.String("notify") c.Bool("test"))
 		} else {
 			println("Config file not present at the given location: ", c.String("config"), "\nPlease give correct file location using --config parameter")
 		}
@@ -81,7 +88,7 @@ func main() {
 	app.Run(os.Args)
 }
 
-func startMonitoring(configFileName string, logFileName string, test bool) {
+func startMonitoring(configFileName string, logFileName string, notify string, test bool) {
 
 	configFile, err := os.Open(configFileName)
 
@@ -97,14 +104,15 @@ func startMonitoring(configFileName string, logFileName string, test bool) {
 		os.Exit(3)
 	}
 
-	// Setup notification clients
-	notify.AddNew(config.Notifications)
+	if notify {
+		// Setup notification clients
+		notify.AddNew(config.Notifications)
 
-	if test == true {
-		// Send test notifications to all notification clients
-		notify.SendTestNotification()
+		if test == true {
+			// Send test notifications to all notification clients
+			notify.SendTestNotification()
+		}
 	}
-
 	// Create unique ids for each request date given in config file
 	reqs, ids := validateAndCreateIdsForRequests(config.Requests)
 
@@ -121,12 +129,15 @@ func startMonitoring(configFileName string, logFileName string, test bool) {
 	// Just to check Endpoint Monitor is running or not
 	http.HandleFunc("/", statusHandler)
 
+	r := mux.NewRouter()
+	r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
+
 	if config.Port == 0 {
 		// Default port
-		http.ListenAndServe(":7321", nil)
+		http.ListenAndServe(":7321", r)
 	} else {
 		// Port is mentioned in config file
-		http.ListenAndServe(":"+strconv.Itoa(config.Port), nil)
+		http.ListenAndServe(":"+strconv.Itoa(config.Port), r)
 	}
 }
 

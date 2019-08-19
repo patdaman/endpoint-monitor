@@ -16,7 +16,7 @@
 			"urlParams": {
 				"name": "endpoint-monitor"
 			},
-			"checkEvery": 30,
+			"checkEvery": 60,
 			"responseCode": 200,
 			"responseTime": 5000
 		},
@@ -27,7 +27,7 @@
 			"urlParams": {
 				"name": "endpoint-monitor"
 			},
-			"checkEvery": 30,
+			"checkEvery": 60,
 			"responseCode": 200,
 			"responseTime": 5000
 		},
@@ -36,7 +36,7 @@
 			"requestType": "GET",
 			"headers": {},
 			"params": {},
-			"checkEvery": 30,
+			"checkEvery": 60,
 			"responseCode": 200,
 			"responseTime": 5000
 		},
@@ -45,7 +45,7 @@
 			"requestType": "GET",
 			"headers": {},
 			"params": {},
-			"checkEvery": 30,
+			"checkEvery": 60,
 			"responseCode": 200,
 			"responseTime": 5000
 		},
@@ -54,7 +54,19 @@
 			"requestType": "GET",
 			"headers": {},
 			"params": {},
-			"checkEvery": 30,
+			"checkEvery": 60,
+			"responseCode": 200,
+			"responseTime": 5000
+		},
+
+
+
+		{
+			"url": "https://omnius15.azurewebsites.net/app/v2.0/",
+			"requestType": "GET",
+			"headers": {},
+			"params": {},
+			"checkEvery": 600,
 			"responseCode": 200,
 			"responseTime": 5000
 		},
@@ -85,6 +97,8 @@
 			"responseCode": 200,
 			"responseTime": 5000
 		},
+
+
 		{
 			"url": "https://sit.questanalytics.com",
 			"requestType": "GET",
@@ -130,6 +144,45 @@
 			"responseCode": 200,
 			"responseTime": 5000
 		},
+
+		{
+			"url": "https://dev-charlie1.azurewebsites.net",
+			"requestType": "GET",
+			"headers": {},
+			"params": {},
+			"checkEvery": 600,
+			"responseCode": 200,
+			"responseTime": 5000
+		},
+		{
+			"url": "https://dev-charlie1-api.azurewebsites.net",
+			"requestType": "GET",
+			"headers": {},
+			"params": {},
+			"checkEvery": 600,
+			"responseCode": 200,
+			"responseTime": 5000
+		},
+		{
+			"url": "https://dev-charlie1-custom.azurewebsites.net/healthz",
+			"requestType": "GET",
+			"headers": {},
+			"params": {},
+			"checkEvery": 600,
+			"responseCode": 200,
+			"responseTime": 5000
+		},
+		{
+			"url": "https://dev-charlie1-custom-api.azurewebsites.net/v2.0/healthz",
+			"requestType": "GET",
+			"headers": {},
+			"params": {},
+			"checkEvery": 600,
+			"responseCode": 200,
+			"responseTime": 5000
+		},
+		
+	
 		{
 			"url": "https://omniusquest01.blob.core.windows.net",
 			"requestType": "GET",
@@ -148,12 +201,14 @@
 			"responseCode": 403,
 			"responseTime": 5000
 		},
+
+
 		{
 			"url": "https://dentalnetwork.ameritas.com/keepalive.html",
 			"requestType": "GET",
 			"headers": {},
 			"params": {},
-			"checkEvery": 40,
+			"checkEvery": 60,
 			"responseCode": 200,
 			"responseTime": 5000
 		},
@@ -162,7 +217,7 @@
 			"requestType": "GET",
 			"headers": {},
 			"params": {},
-			"checkEvery": 40,
+			"checkEvery": 120,
 			"responseCode": 200,
 			"responseTime": 5000
 		},
@@ -182,7 +237,16 @@
 			"params": {},
 			"checkEvery": 60,
 			"responseCode": 200,
-			"responseTime": 10000
+			"responseTime": 5000
+		},
+		{
+			"url": "https://www.ameritas.com/wps/portal/s000/Home/public/dce",
+			"requestType": "GET",
+			"headers": {},
+			"params": {},
+			"checkEvery": 120,
+			"responseCode": 200,
+			"responseTime": 5000
 		},
 		{
 			"url": "https://apigateway.ameritas.com/claims/",
@@ -195,5 +259,5 @@
 		}
 	],
 	"port": 7321,
-	"concurrency": 4
+	"concurrency": 5
 }
