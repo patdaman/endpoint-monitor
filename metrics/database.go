@@ -7,9 +7,9 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/patdaman/endpoint-monitor/model"
 	"github.com/patdaman/endpoint-monitor/notify"
+	"github.com/sirupsen/logrus"
 )
 
 var (

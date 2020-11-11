@@ -53,17 +53,15 @@ func main() {
 		},
 		&cli.BoolFlag{
 			Name:  "notify",
-			Value: false,
 			Usage: "send notifications on alerts",
 		},
 		&cli.BoolFlag{
 			Name:  "test",
-			Value: false,
 			Usage: "send test notifications on start",
 		},
 	}
 
-	app.Action = func(c cli.Context) {
+	app.Action = func(c *cli.Context) error {
 
 		if fileExists(c.String("config")) {
 
@@ -83,7 +81,7 @@ func main() {
 		} else {
 			println("Config file not present at the given location: ", c.String("config"), "\nPlease give correct file location using --config parameter")
 		}
-
+		return nil
 	}
 
 	// Run as cli app
