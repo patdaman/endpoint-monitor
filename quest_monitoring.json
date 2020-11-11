@@ -3,7 +3,7 @@
 		"influxDb": {
 			"host": "localhost",
 			"port": 8086,
-			"databaseName": "Monitoring",
+			"databaseName": "monitoring",
 			"username": "",
 			"password": ""
 		}

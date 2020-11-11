@@ -6,28 +6,17 @@
 FROM golang
 
 # Copy the local package files to the container's workspace.
-ADD . /go/src/github.com/patdaman/endpoint-monitor
+# ADD . /go/src/github.com/patdaman/endpoint-monitor
+ADD . /
 
 # Build the outyet command inside the container.
-# (You may fetch or manage dependencies here,
-# either manually or with a tool like "godep".)
-RUN go get github.com/codegangsta/cli
-RUN go get github.com/influxdb/influxdb
-RUN go install github.com/patdaman/endpoint--monitor
+ RUN go install https://github.com/patdaman/endpoint-monitor
+# RUN go install
 
-RUN wget http://influxdb.s3.amazonaws.com/influxdb_0.9.3_amd64.deb
-RUN dpkg -i influxdb_0.9.3_amd64.deb
-RUN /etc/init.d/influxdb start
+RUN go build -o main .
 
-RUN wget https://grafanarel.s3.amazonaws.com/builds/grafana_2.1.3_amd64.deb
-RUN apt-get update
-RUN apt-get install -y adduser libfontconfig
-RUN dpkg -i grafana_2.1.3_amd64.deb
-RUN service grafana-server start
-
-#how to connect to localhost inside ?? http://stackoverflow.com/questions/24319662/from-inside-of-a-docker-container-how-do-i-connect-to-the-localhost-of-the-mach
-
-ENTRYPOINT /go/bin/endpoint-monitor --config /go/src/github.com/patdaman/endpoint-monitor/config.json
+# ENTRYPOINT /go/bin/endpoint-monitor --config /go/src/github.com/patdaman/endpoint-monitor/config.json
+ENTRYPOINT /go/bin/endpoint-monitor --config ./config.json
 
 # Document that the service listens 
 EXPOSE 80 8083 8086 7321 3000
