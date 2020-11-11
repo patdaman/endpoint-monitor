@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/patdaman/endpoint-monitor/model"
 )
 
 type SlackNotify struct {
@@ -41,7 +43,7 @@ func (slackNotify SlackNotify) Initialize() error {
 	return nil
 }
 
-func (slackNotify SlackNotify) SendResponseTimeNotification(responseTimeNotification ResponseTimeNotification) error {
+func (slackNotify SlackNotify) SendResponseTimeNotification(responseTimeNotification model.ResponseTimeNotification) error {
 
 	message := getMessageFromResponseTimeNotification(responseTimeNotification)
 
@@ -66,7 +68,7 @@ func (slackNotify SlackNotify) SendResponseTimeNotification(responseTimeNotifica
 	return nil
 }
 
-func (slackNotify SlackNotify) SendErrorNotification(errorNotification ErrorNotification) error {
+func (slackNotify SlackNotify) SendErrorNotification(errorNotification model.ErrorNotification) error {
 
 	message := getMessageFromErrorNotification(errorNotification)
 

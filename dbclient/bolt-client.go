@@ -8,7 +8,7 @@ import (
 	"context"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/etcd-io/bbolt"
+	bolt "github.com/etcd-io/bbolt"
 	"github.com/patdaman/endpoint-monitor/model"
 	"github.com/patdaman/endpoint-monitor/tracing"
 )

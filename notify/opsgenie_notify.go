@@ -6,6 +6,7 @@ import (
 
 	"github.com/opsgenie/opsgenie-go-sdk/alertsv2"
 	ogcli "github.com/opsgenie/opsgenie-go-sdk/client"
+	"github.com/patdaman/endpoint-monitor/model"
 )
 
 type OpsgenieNotify struct {
@@ -21,7 +22,7 @@ func (opsgenieNotify OpsgenieNotify) Initialize() error {
 	return nil
 }
 
-func (opsgenieNotify OpsgenieNotify) SendNotification(notification Notification) error {
+func (opsgenieNotify OpsgenieNotify) SendNotification(notification model.Notification) error {
 	cli := new(ogcli.OpsGenieClient)
 	cli.SetAPIKey(opsgenieNotify.APIKey)
 

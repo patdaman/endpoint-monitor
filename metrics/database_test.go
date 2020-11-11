@@ -3,6 +3,8 @@ package database
 import (
 	"errors"
 	"testing"
+
+	"github.com/patdaman/endpoint-monitor/model"
 )
 
 func TestInitialize(t *testing.T) {
@@ -49,7 +51,7 @@ func TestAddRequestAndErrorInfo(t *testing.T) {
 
 	Initialize(ids, 1, 10)
 
-	requestInfo := RequestInfo{
+	requestInfo := model.RequestInfo{
 		Id:                   1,
 		Url:                  "http://test.com",
 		RequestType:          "GET",
@@ -61,7 +63,7 @@ func TestAddRequestAndErrorInfo(t *testing.T) {
 		ExpectedResponseBody: "This is the test body",
 	}
 
-	errorInfo := ErrorInfo{
+	errorInfo := model.ErrorInfo{
 		Id:           0,
 		Url:          "http://test.com",
 		RequestType:  "GET",
@@ -133,47 +135,5 @@ func TestAddValidDatabase(t *testing.T) {
 
 	if len(dbList) != 1 {
 		t.Error("Not able to add databse to list")
-	}
-}
-
-// Insert test data to database
-func addTestErrorAndRequestInfo() {
-
-	println("Adding Test data to your database ....")
-
-	// requestInfo := RequestInfo{0, "http://test.com", "GET", 0, "", 0, 0}
-	requestInfo := RequestInfo{
-		Id:                   0,
-		Url:                  "http://test.com",
-		RequestType:          "GET",
-		ResponseCode:         0,
-		ExpectedResponseCode: 200,
-		ResponseTime:         0,
-		ExpectedResponseTime: 0,
-		ResponseBody:         "",
-		ExpectedResponseBody: "",
-	}
-
-	// errorInfo := ErrorInfo{0, "http://test.com", "GET", 0, "test response", errors.New("test error"), "test other info"}
-	errorInfo := ErrorInfo{
-		Id:           0,
-		Url:          "http://test.com",
-		RequestType:  "GET",
-		ResponseCode: 0,
-		Reason:       errors.New("test error"),
-		OtherInfo:    "test other info"}
-
-	for _, db := range dbList {
-		reqErr := db.AddRequestInfo(requestInfo)
-		if reqErr != nil {
-			println(db.GetDatabaseName, ": Failed to insert Request Info to database. Please check whether database is installed properly")
-		}
-
-		errErr := db.AddErrorInfo(errorInfo)
-
-		if errErr != nil {
-			println(db.GetDatabaseName, ": Failed to insert Error Info to database. Please check whether database is installed properly")
-		}
-
 	}
 }

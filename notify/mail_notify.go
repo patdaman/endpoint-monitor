@@ -2,12 +2,14 @@ package notify
 
 import (
 	"bytes"
+	"errors"
 	"net"
 	"net/mail"
 	"net/smtp"
 	"strconv"
 	"time"
-	"errors"
+
+	"github.com/patdaman/endpoint-monitor/model"
 )
 
 type MailNotify struct {
@@ -20,7 +22,7 @@ type MailNotify struct {
 }
 
 type loginAuth struct {
-  username, password string
+	username, password string
 }
 
 var (
@@ -92,7 +94,7 @@ func (mailNotify MailNotify) Initialize() error {
 	return nil
 }
 
-func (mailNotify MailNotify) SendResponseTimeNotification(responseTimeNotification ResponseTimeNotification) error {
+func (mailNotify MailNotify) SendResponseTimeNotification(responseTimeNotification model.ResponseTimeNotification) error {
 	if isAuthorized {
 
 		auth := LoginAuth(mailNotify.Username, mailNotify.Password)
@@ -132,7 +134,7 @@ func (mailNotify MailNotify) SendResponseTimeNotification(responseTimeNotificati
 	}
 }
 
-func (mailNotify MailNotify) SendErrorNotification(errorNotification ErrorNotification) error {
+func (mailNotify MailNotify) SendErrorNotification(errorNotification model.ErrorNotification) error {
 	if isAuthorized {
 
 		auth := LoginAuth(mailNotify.Username, mailNotify.Password)

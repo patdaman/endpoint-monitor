@@ -9,10 +9,10 @@ import (
 	"context"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/patdaman/endpoint-monitor/dbclient"
 	"github.com/patdaman/endpoint-monitor/model"
+	"github.com/patdaman/endpoint-monitor/tracing"
 
-	"github.com/patdaman/local-db"
-	
 	"github.com/gorilla/mux"
 )
 

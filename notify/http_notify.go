@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+
+	"github.com/patdaman/endpoint-monitor/model"
 )
 
 const (
@@ -36,7 +38,7 @@ func (httpNotify HttpNotify) Initialize() error {
 	return nil
 }
 
-func (httpNotify HttpNotify) SendResponseTimeNotification(responseTimeNotification ResponseTimeNotification) error {
+func (httpNotify HttpNotify) SendResponseTimeNotification(responseTimeNotification model.ResponseTimeNotification) error {
 	var request *http.Request
 	var reqErr error
 
@@ -92,7 +94,7 @@ func (httpNotify HttpNotify) SendResponseTimeNotification(responseTimeNotificati
 
 }
 
-func (httpNotify HttpNotify) SendErrorNotification(errorNotification ErrorNotification) error {
+func (httpNotify HttpNotify) SendErrorNotification(errorNotification model.ErrorNotification) error {
 	var request *http.Request
 	var reqErr error
 

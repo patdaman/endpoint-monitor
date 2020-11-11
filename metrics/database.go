@@ -92,7 +92,7 @@ func AddNew(databaseTypes DatabaseTypes) {
 	// Set first database as primary
 	if len(dbList) != 0 {
 		dbMain = dbList[0]
-		addTestErrorAndRequestInfo()
+		AddTestErrorAndRequestInfo()
 	} else {
 		fmt.Println("No Database selected.")
 	}
@@ -133,7 +133,7 @@ func AddErrorInfo(errorInfo model.ErrorInfo) {
 	logErrorInfo(errorInfo)
 
 	// Request failed send notification
-	notify.SendErrorNotification(notify.ErrorNotification{
+	notify.SendErrorNotification(model.ErrorNotification{
 		Url:         errorInfo.Url,
 		RequestType: errorInfo.RequestType,
 		Error:       errorInfo.Reason.Error(),
@@ -249,8 +249,8 @@ func logRequestInfo(requestInfo model.RequestInfo) {
 	}
 }
 
-func getNotificationObject(requestInfo model.RequestInfo) notify.Notification {
-	notificationObject := notify.Notification{
+func getNotificationObject(requestInfo model.RequestInfo) model.Notification {
+	notificationObject := model.Notification{
 		Url:                  requestInfo.Url,
 		RequestType:          requestInfo.RequestType,
 		ExpectedResponseTime: requestInfo.ExpectedResponseTime,
@@ -259,4 +259,46 @@ func getNotificationObject(requestInfo model.RequestInfo) notify.Notification {
 		ResponseCode:         requestInfo.ResponseCode,
 	}
 	return notificationObject
+}
+
+// Insert test data to database
+func AddTestErrorAndRequestInfo() {
+
+	println("Adding Test data to your database ....")
+
+	// requestInfo := RequestInfo{0, "http://test.com", "GET", 0, "", 0, 0}
+	requestInfo := model.RequestInfo{
+		Id:                   0,
+		Url:                  "http://test.com",
+		RequestType:          "GET",
+		ResponseCode:         0,
+		ExpectedResponseCode: 200,
+		ResponseTime:         0,
+		ExpectedResponseTime: 0,
+		ResponseBody:         "",
+		ExpectedResponseBody: "",
+	}
+
+	// errorInfo := ErrorInfo{0, "http://test.com", "GET", 0, "test response", errors.New("test error"), "test other info"}
+	errorInfo := model.ErrorInfo{
+		Id:           0,
+		Url:          "http://test.com",
+		RequestType:  "GET",
+		ResponseCode: 0,
+		Reason:       errors.New("test error"),
+		OtherInfo:    "test other info"}
+
+	for _, db := range dbList {
+		reqErr := db.AddRequestInfo(requestInfo)
+		if reqErr != nil {
+			println(db.GetDatabaseName, ": Failed to insert Request Info to database. Please check whether database is installed properly")
+		}
+
+		errErr := db.AddErrorInfo(errorInfo)
+
+		if errErr != nil {
+			println(db.GetDatabaseName, ": Failed to insert Error Info to database. Please check whether database is installed properly")
+		}
+
+	}
 }

@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/patdaman/endpoint-monitor/model"
 	"github.com/patdaman/endpoint-monitor/notify"
 )
 
@@ -163,17 +164,17 @@ func AddRequestInfo(requestInfo RequestInfo) {
 	if meanErr == nil {
 		if mean > requestInfo.ExpectedResponseTime {
 			clearQueue(requestInfo.Id)
-			// notify.SendResponseTimeNotification(notify.ResponseTimeNotification{
-			// 	Url:                  requestInfo.Url,
-			// 	RequestType:          requestInfo.RequestType,
-			// 	ExpectedResponsetime: requestInfo.ExpectedResponseTime,
-			// 	MeanResponseTime:     mean})
-			notify.SendNotification(notify.Notification{
+			notify.SendResponseTimeNotification(model.ResponseTimeNotification{
 				Url:                  requestInfo.Url,
-				NotificationType:     "ResponseTime",
 				RequestType:          requestInfo.RequestType,
-				ExpectedResponseTime: requestInfo.ExpectedResponseTime,
+				ExpectedResponsetime: requestInfo.ExpectedResponseTime,
 				MeanResponseTime:     mean})
+			// notify.SendNotification(model.Notification{
+			// 	Url:                  requestInfo.Url,
+			// 	NotificationType:     "ResponseTime",
+			// 	RequestType:          requestInfo.RequestType,
+			// 	ExpectedResponseTime: requestInfo.ExpectedResponseTime,
+			// 	MeanResponseTime:     mean})
 		}
 	}
 
@@ -185,7 +186,7 @@ func AddErrorInfo(errorInfo ErrorInfo) {
 	logErrorInfo(errorInfo)
 
 	// Request failed send notification
-	notify.SendErrorNotification(notify.ErrorNotification{
+	notify.SendErrorNotification(model.ErrorNotification{
 		Url:         errorInfo.Url,
 		RequestType: errorInfo.RequestType,
 		Error:       errorInfo.Reason.Error(),

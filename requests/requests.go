@@ -14,6 +14,7 @@ import (
 	"time"
 
 	database "github.com/patdaman/endpoint-monitor/metrics"
+	"github.com/patdaman/endpoint-monitor/model"
 )
 
 var (
@@ -195,12 +196,12 @@ func PerformRequest(requestConfig RequestConfig, throttle chan int) error {
 		if requestConfig.Headers[ContentType] == JsonContentType {
 			jsonBody, jsonErr := GetJsonParamsBody(requestConfig.FormParams)
 			if jsonErr != nil {
-				go database.AddErrorInfo(database.ErrorInfo{
+				go database.AddErrorInfo(model.ErrorInfo{
 					Id:           requestConfig.Id,
 					Url:          requestConfig.Url,
 					RequestType:  requestConfig.RequestType,
 					ResponseCode: 0,
-					Reason:       database.ErrCreateRequest,
+					Reason:       model.ErrCreateRequest,
 					OtherInfo:    jsonErr.Error(),
 					// ResponseBody: "Unable to create Request object",
 				})
@@ -229,12 +230,12 @@ func PerformRequest(requestConfig RequestConfig, throttle chan int) error {
 	}
 
 	if reqErr != nil {
-		go database.AddErrorInfo(database.ErrorInfo{
+		go database.AddErrorInfo(model.ErrorInfo{
 			Id:           requestConfig.Id,
 			Url:          requestConfig.Url,
 			RequestType:  requestConfig.RequestType,
 			ResponseCode: 0,
-			Reason:       database.ErrCreateRequest,
+			Reason:       model.ErrCreateRequest,
 			OtherInfo:    reqErr.Error(),
 			// ResponseBody: "Unable to create Request object",
 		})
@@ -272,12 +273,12 @@ func PerformRequest(requestConfig RequestConfig, throttle chan int) error {
 		} else {
 			statusCode = getResponse.StatusCode
 		}
-		go database.AddErrorInfo(database.ErrorInfo{
+		go database.AddErrorInfo(model.ErrorInfo{
 			Id:           requestConfig.Id,
 			Url:          requestConfig.Url,
 			RequestType:  requestConfig.RequestType,
 			ResponseCode: statusCode,
-			Reason:       database.ErrDoRequest,
+			Reason:       model.ErrDoRequest,
 			OtherInfo:    respErr.Error(),
 			// ResponseBody: convertResponseToString(getResponse),
 		})
@@ -287,7 +288,7 @@ func PerformRequest(requestConfig RequestConfig, throttle chan int) error {
 	defer getResponse.Body.Close()
 
 	if getResponse.StatusCode != requestConfig.ResponseCode {
-		go database.AddErrorInfo(database.ErrorInfo{
+		go database.AddErrorInfo(model.ErrorInfo{
 			Id:           requestConfig.Id,
 			Url:          requestConfig.Url,
 			RequestType:  requestConfig.RequestType,
@@ -302,11 +303,11 @@ func PerformRequest(requestConfig RequestConfig, throttle chan int) error {
 	elapsed := time.Since(start)
 
 	// Request succesfull. Add infomartion to Database
-	go database.AddRequestInfo(database.RequestInfo{
+	go database.AddRequestInfo(model.RequestInfo{
 		Id:                   requestConfig.Id,
 		Url:                  requestConfig.Url,
 		RequestType:          requestConfig.RequestType,
-		ResponseCode:         getResponse.StatusCode,
+		ResponseCode:         int64(getResponse.StatusCode),
 		ResponseTime:         elapsed.Nanoseconds() / 1000000,
 		ExpectedResponseTime: requestConfig.ResponseTime,
 		// ResponseBody:         convertResponseToString(getResponse),

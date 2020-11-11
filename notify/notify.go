@@ -2,6 +2,7 @@ package notify
 
 import (
 	"fmt"
+	"os"
 	"reflect"
 	"regexp"
 	"strings"
@@ -20,7 +21,7 @@ type NotificationTypes struct {
 
 var (
 	errorCount        = 0
-	notificationsList []Notify
+	NotificationsList []Notify
 )
 
 type Notify interface {
@@ -43,11 +44,11 @@ func AddNew(notificationTypes NotificationTypes) {
 		notifyString := fmt.Sprint(v.Field(i).Interface().(Notify))
 		// Check whether notify object is empty . if its not empty add to the list
 		if !isEmptyObject(notifyString) {
-			notificationsList = append(notificationsList, v.Field(i).Interface().(Notify))
+			NotificationsList = append(NotificationsList, v.Field(i).Interface().(Notify))
 		}
 	}
 
-	if len(notificationsList) == 0 {
+	if len(NotificationsList) == 0 {
 		println("No clients Registered for Notifications")
 	} else {
 		println("Initializing Notification Clients....")
@@ -68,7 +69,7 @@ func AddNew(notificationTypes NotificationTypes) {
 
 // Format model.Notification type and send
 func SendNotification(notification model.Notification) {
-	for _, value := range model.NotificationsList {
+	for _, value := range NotificationsList {
 		err := value.SendNotification(notification)
 		//TODO: Combine the other two functions into this method
 		// 	+ add additional notification types
@@ -82,7 +83,7 @@ func SendNotification(notification model.Notification) {
 // Send response time model.Notification to all clients registered
 func SendResponseTimeNotification(responseTimeNotification model.ResponseTimeNotification) {
 
-	for _, value := range model.NotificationsList {
+	for _, value := range NotificationsList {
 		err := value.SendResponseTimeNotification(responseTimeNotification)
 		//TODO: retry if fails ? what to do when error occurs ?
 		if err != nil {
@@ -94,7 +95,7 @@ func SendResponseTimeNotification(responseTimeNotification model.ResponseTimeNot
 // Send Error model.Notification to all clients registered
 func SendErrorNotification(errorNotification model.ErrorNotification) {
 
-	for _, value := range model.NotificationsList {
+	for _, value := range NotificationsList {
 		err := value.SendErrorNotification(errorNotification)
 		//TODO: retry if fails ? what to do when error occurs ?
 		if err != nil {
@@ -123,13 +124,13 @@ func isEmptyObject(objectString string) bool {
 
 // A readable message string from ResponseTimeNotification
 func getMessageFromResponseTimeNotification(responseTimeNotification model.ResponseTimeNotification) string {
-	message := fmt.Sprintf(model.ResponseTimeMessage, responseTimeNotification.Url, responseTimeNotification.RequestType, responseTimeNotification.MeanResponseTime, responseTimeNotification.ExpectedResponsetime)
+	message := fmt.Sprintf(string(model.ResponseTimeMessage), responseTimeNotification.Url, responseTimeNotification.RequestType, responseTimeNotification.MeanResponseTime, responseTimeNotification.ExpectedResponsetime)
 	return message
 }
 
 // A readable message string from model.ErrorNotification
 func getMessageFromErrorNotification(errorNotification model.ErrorNotification) string {
-	message := fmt.Sprintf(model.ErrorMessage, errorNotification.Url, errorNotification.RequestType, errorNotification.Error, errorNotification.OtherInfo)
+	message := fmt.Sprintf(string(model.ErrorMessage), errorNotification.Url, errorNotification.RequestType, errorNotification.Error, errorNotification.OtherInfo)
 	// message := fmt.Sprintf(model.ErrorMessage, errorNotification.Url, errorNotification.RequestType, errorNotification.Error, errorNotification.ResponseBody, model.ErrorNotification.OtherInfo)
 	return message
 }
@@ -150,4 +151,33 @@ func getSubjectFromNotification(notification model.Notification) string {
 func getMessageFromNotification(notification model.Notification) string {
 	subject := fmt.Sprintf("Error returned from %v", notification.Url)
 	return subject
+}
+
+// Send Test model.Notification to all registered clients .To make sure everything is working
+func SendTestNotification() {
+
+	println("Sending Test Notifications to the registered clients")
+
+	for _, value := range NotificationsList {
+		err := value.SendResponseTimeNotification(model.ResponseTimeNotification{"http://test.com", "GET", 700, 800})
+
+		if err != nil {
+			println("Failed to Send Response Time Notification to ", value.GetClientName(), " Please check the details entered in the config file")
+			println("Error Details :", err.Error())
+			os.Exit(3)
+		} else {
+			println("Sent Test Response Time Notification to ", value.GetClientName(), ". Make sure you received it")
+		}
+
+		// err1 := value.SendErrorNotification(model.ErrorNotification{"http://test.com", "GET", "This is test Notification", "Test Notification", "test"})
+		err1 := value.SendErrorNotification(model.ErrorNotification{"http://test.com", "GET", "This is test Notification", "Test Notification"})
+
+		if err1 != nil {
+			println("Failed to Send Error Notification to ", value.GetClientName(), " Please check the details entered in the config file")
+			println("Error Details :", err1.Error())
+			os.Exit(3)
+		} else {
+			println("Sent Test Error Notification to ", value.GetClientName(), ". Make sure you received it")
+		}
+	}
 }

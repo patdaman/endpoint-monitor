@@ -3,12 +3,15 @@ package tracing
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/Sirupsen/logrus"
 	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
-	zipkin "github.com/openzipkin/zipkin-go-opentracing"
+	zipkinot "github.com/openzipkin-contrib/zipkin-go-opentracing"
+	"github.com/openzipkin/zipkin-go"
+	zipkinhttp "github.com/openzipkin/zipkin-go/reporter/http"
 )
 
 // Tracer instance
@@ -23,8 +26,19 @@ func SetTracer(initializedTracer opentracing.Tracer) {
 // InitTracing connects the calling service to Zipkin and initializes the tracer.
 func InitTracing(zipkinURL string, serviceName string) {
 	logrus.Infof("Connecting to zipkin server at %v", zipkinURL)
-	collector, err := zipkin.NewHTTPCollector(
-		fmt.Sprintf("%s/api/v1/spans", zipkinURL))
+	// collector, err := zipkin.NewHTTPCollector(
+	//	fmt.Sprintf("%s/api/v1/spans", zipkinURL))
+	// collector, err := zipkinhttp.NewHTTPCollector(
+	//	fmt.Sprintf("%s/api/v1/spans", zipkinURL))
+
+	reporter := zipkinhttp.NewReporter("http://zipkinhost:9411/api/v2/spans")
+	defer reporter.Close()
+	// create our local service endpoint
+	endpoint, err := zipkin.NewEndpoint("myService", "myservice.mydomain.com:80")
+	if err != nil {
+		log.Fatalf("unable to create local endpoint: %+v\n", err)
+	}
+
 	if err != nil {
 		logrus.Info("Error connecting to zipkin server at " +
 			fmt.Sprintf("%s/api/v1/spans", zipkinURL) + ". Error: " + err.Error())
@@ -33,12 +47,18 @@ func InitTracing(zipkinURL string, serviceName string) {
 		panic("Error connecting to zipkin server at " +
 			fmt.Sprintf("%s/api/v1/spans", zipkinURL) + ". Error: " + err.Error())
 	}
-	tracer, err = zipkin.NewTracer(
-		zipkin.NewRecorder(collector, false, "127.0.0.1:0", serviceName))
+	// tracer, err = zipkin.NewTracer(
+	// 	zipkin.NewRecorder(collector, false, "127.0.0.1:0", serviceName))
+
+	nativeTracer, err := zipkin.NewTracer(reporter, zipkin.WithLocalEndpoint(endpoint))
 	if err != nil {
 		logrus.Errorln("Error starting new zipkin tracer. Error: " + err.Error())
 		panic("Error starting new zipkin tracer. Error: " + err.Error())
 	}
+	// use zipkin-go-opentracing to wrap our tracer
+	tracer := zipkinot.Wrap(nativeTracer)
+	// optionally set as Global OpenTracing tracer instance
+	opentracing.SetGlobalTracer(tracer)
 	logrus.Infof("Successfully started zipkin tracer for service '%v'", serviceName)
 }
 

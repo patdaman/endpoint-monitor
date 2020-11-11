@@ -9,6 +9,7 @@ import (
 	"time"
 
 	client "github.com/influxdata/influxdb1-client/v2"
+	"github.com/patdaman/endpoint-monitor/model"
 )
 
 type InfluxDb struct {
@@ -78,7 +79,7 @@ func (influxDb InfluxDb) Initialize() error {
 }
 
 //Add request information to database
-func (influxDb InfluxDb) AddRequestInfo(requestInfo RequestInfo) error {
+func (influxDb InfluxDb) AddRequestInfo(requestInfo model.RequestInfo) error {
 
 	tags := map[string]string{
 		"requestId":   strconv.Itoa(requestInfo.Id),
@@ -123,7 +124,7 @@ func (influxDb InfluxDb) AddRequestInfo(requestInfo RequestInfo) error {
 }
 
 //Add Error information to database
-func (influxDb InfluxDb) AddErrorInfo(errorInfo ErrorInfo) error {
+func (influxDb InfluxDb) AddErrorInfo(errorInfo model.ErrorInfo) error {
 
 	tags := map[string]string{
 		"requestId":   strconv.Itoa(errorInfo.Id),

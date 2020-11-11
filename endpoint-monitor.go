@@ -10,11 +10,13 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/urfave/cli"
+	// "github.com/codegangsta/cli"
 	"github.com/gorilla/mux"
-	"github.com/codegangsta/cli"
-	"github.com/patdaman/endpoint-monitor/metrics"
+	database "github.com/patdaman/endpoint-monitor/metrics"
 	"github.com/patdaman/endpoint-monitor/notify"
 	"github.com/patdaman/endpoint-monitor/requests"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 type configParser struct {
@@ -36,32 +38,32 @@ func main() {
 	// Cli tool setup to get config file path from parameters
 	app := cli.NewApp()
 	app.Name = "Endpoint-Monitor"
-	app.Usage = "Monitor http(s) endpoints 
-	Save telemetry data to Influx DB 
-	Send notifications in multiple formats"
+	app.Usage = "Monitor http(s) endpoints \r\nSave telemetry data to Influx DB \r\nSend notifications in multiple formats"
 
 	app.Flags = []cli.Flag{
-		cli.StringFlag{
+		&cli.StringFlag{
 			Name:  "config",
 			Value: "config.json",
 			Usage: "location of config file",
 		},
-		cli.StringFlag{
+		&cli.StringFlag{
 			Name:  "log",
 			Value: "",
 			Usage: "file to save logs",
 		},
-		cli.BoolFlag{
+		&cli.BoolFlag{
 			Name:  "notify",
+			Value: false,
 			Usage: "send notifications on alerts",
 		},
-		cli.BoolFlag{
+		&cli.BoolFlag{
 			Name:  "test",
+			Value: false,
 			Usage: "send test notifications on start",
 		},
 	}
 
-	app.Action = func(c *cli.Context) {
+	app.Action = func(c cli.Context) {
 
 		if fileExists(c.String("config")) {
 
@@ -77,7 +79,7 @@ func main() {
 			println("Reading File :", c.String("config"))
 
 			// Start monitoring when a valid file path is given
-			startMonitoring(c.String("config"), c.String("log"), c.String("notify") c.Bool("test"))
+			startMonitoring(c.String("config"), c.String("log"), c.Bool("notifyActive"), c.Bool("test"))
 		} else {
 			println("Config file not present at the given location: ", c.String("config"), "\nPlease give correct file location using --config parameter")
 		}
@@ -88,7 +90,7 @@ func main() {
 	app.Run(os.Args)
 }
 
-func startMonitoring(configFileName string, logFileName string, notify string, test bool) {
+func startMonitoring(configFileName string, logFileName string, notifyActive bool, test bool) {
 
 	configFile, err := os.Open(configFileName)
 
@@ -104,7 +106,7 @@ func startMonitoring(configFileName string, logFileName string, notify string, t
 		os.Exit(3)
 	}
 
-	if notify {
+	if notifyActive {
 		// Setup notification clients
 		notify.AddNew(config.Notifications)
 

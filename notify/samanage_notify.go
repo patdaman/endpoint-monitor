@@ -2,13 +2,12 @@ package notify
 
 import (
 	"bytes"
-	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"net/http"
-	"net/url"
 	"strconv"
+
+	"github.com/patdaman/endpoint-monitor/model"
 )
 
 type SamanageAPIHeader string
@@ -40,7 +39,7 @@ func (samanageNotify SamanageNotify) Initialize() error {
 	return nil
 }
 
-func (samanageNotify SamanageNotify) SendResponseTimeNotification(responseTimeNotification ResponseTimeNotification) error {
+func (samanageNotify SamanageNotify) SendResponseTimeNotification(responseTimeNotification model.ResponseTimeNotification) error {
 	var request *http.Request
 	var reqErr error
 
@@ -89,7 +88,7 @@ func (samanageNotify SamanageNotify) SendResponseTimeNotification(responseTimeNo
 
 }
 
-func (samanageNotify SamanageNotify) SendErrorNotification(errorNotification ErrorNotification) error {
+func (samanageNotify SamanageNotify) SendErrorNotification(errorNotification model.ErrorNotification) error {
 	var request *http.Request
 	var reqErr error
 
@@ -146,34 +145,34 @@ func (samanageNotify SamanageNotify) SendErrorNotification(errorNotification Err
 	return nil
 }
 
-func AddHeaders(req *http.Request, headers map[string]string) {
-	for key, value := range headers {
-		req.Header.Add(key, value)
-	}
-}
+// func AddHeaders(req *http.Request, headers map[string]string) {
+// 	for key, value := range headers {
+// 		req.Header.Add(key, value)
+// 	}
+// }
 
-func GetUrlValues(msgParam MessageParam) url.Values {
-	urlParams := url.Values{}
-	urlParams.Set("message", msgParam.Message)
-	return urlParams
-}
+// func GetUrlValues(msgParam MessageParam) url.Values {
+// 	urlParams := url.Values{}
+// 	urlParams.Set("message", msgParam.Message)
+// 	return urlParams
+// }
 
-func GetJsonParamsBody(msgParam MessageParam) (io.Reader, error) {
+// func GetJsonParamsBody(msgParam MessageParam) (io.Reader, error) {
 
-	data, jsonErr := json.Marshal(msgParam)
+// 	data, jsonErr := json.Marshal(msgParam)
 
-	if jsonErr != nil {
+// 	if jsonErr != nil {
 
-		jsonErr = errors.New("Invalid Parameters for Content-Type application/json : " + jsonErr.Error())
+// 		jsonErr = errors.New("Invalid Parameters for Content-Type application/json : " + jsonErr.Error())
 
-		return nil, jsonErr
-	}
+// 		return nil, jsonErr
+// 	}
 
-	return bytes.NewBuffer(data), nil
-}
+// 	return bytes.NewBuffer(data), nil
+// }
 
-func getStringFromResponseBody(body io.ReadCloser) string {
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(body)
-	return buf.String()
-}
+// func getStringFromResponseBody(body io.ReadCloser) string {
+// 	buf := new(bytes.Buffer)
+// 	buf.ReadFrom(body)
+// 	return buf.String()
+// }
