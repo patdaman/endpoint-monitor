@@ -13,6 +13,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/afex/hystrix-go/hystrix"
 	"github.com/eapache/go-resiliency/retrier"
+	"github.com/patdaman/endpoint-monitor/src/tracing"
 	"github.com/spf13/viper"
 )
 

@@ -9,8 +9,8 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	bolt "github.com/etcd-io/bbolt"
-	"github.com/patdaman/endpoint-monitor/model"
-	"github.com/patdaman/endpoint-monitor/tracing"
+	"github.com/patdaman/endpoint-monitor/src/model"
+	"github.com/patdaman/endpoint-monitor/src/tracing"
 )
 
 // IBoltClient defines a simple little interface for interacting with a BoltDB

@@ -7,8 +7,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/patdaman/endpoint-monitor/model"
-	"github.com/patdaman/endpoint-monitor/notify"
+	"github.com/patdaman/endpoint-monitor/src/model"
+	"github.com/patdaman/endpoint-monitor/src/notify"
 	"github.com/sirupsen/logrus"
 )
 

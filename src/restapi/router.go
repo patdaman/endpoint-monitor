@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/patdaman/endpoint-monitor/tracing"
+	"github.com/patdaman/endpoint-monitor/src/tracing"
 )
 
 // NewRouter creates a mux.Router pointer.

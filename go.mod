@@ -1,4 +1,4 @@
-module github.com/patdaman/endpoint-monitor
+module endpoint-monitor
 
 go 1.15
 

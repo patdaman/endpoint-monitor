@@ -10,13 +10,20 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/urfave/cli"
-	// "github.com/codegangsta/cli"
+	// "github.com/gorilla/mux"
+	database "github.com/patdaman/endpoint-monitor/src/metrics"
+	"github.com/patdaman/endpoint-monitor/src/notify"
+	"github.com/patdaman/endpoint-monitor/src/requests"
+	httpSwagger "github.com/swaggo/src/http-swagger"
+
+	// "github.com/urfave/cli"
+	// "database"
+	// "notify"
+	// "requests"
+
 	"github.com/gorilla/mux"
-	database "github.com/patdaman/endpoint-monitor/metrics"
-	"github.com/patdaman/endpoint-monitor/notify"
-	"github.com/patdaman/endpoint-monitor/requests"
 	httpSwagger "github.com/swaggo/http-swagger"
+	"github.com/urfave/cli"
 )
 
 type configParser struct {

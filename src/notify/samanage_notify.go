@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/patdaman/endpoint-monitor/model"
+	"github.com/patdaman/endpoint-monitor/src/model"
 )
 
 type SamanageAPIHeader string

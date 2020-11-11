@@ -10,13 +10,14 @@ FROM golang
 ADD . /
 
 # Build the outyet command inside the container.
- RUN go install https://github.com/patdaman/endpoint-monitor
+RUN go get github.com/patdaman/endpoint-monitor@development
+# RUN go install https://github.com/patdaman/endpoint-monitor@development
 # RUN go install
 
-RUN go build -o main .
+RUN go build -o main /github.com/patdaman/endpoint-monitor@development
 
 # ENTRYPOINT /go/bin/endpoint-monitor --config /go/src/github.com/patdaman/endpoint-monitor/config.json
-ENTRYPOINT /go/bin/endpoint-monitor --config ./config.json
+ENTRYPOINT /go/bin/endpoint-monitor --config ./quest_monitoring.json
 
 # Document that the service listens 
 EXPOSE 80 8083 8086 7321 3000

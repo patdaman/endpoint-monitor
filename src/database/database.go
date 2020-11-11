@@ -8,8 +8,8 @@ import (
 	"strings"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/patdaman/endpoint-monitor/model"
-	"github.com/patdaman/endpoint-monitor/notify"
+	"github.com/patdaman/endpoint-monitor/src/model"
+	"github.com/patdaman/endpoint-monitor/src/notify"
 )
 
 var (

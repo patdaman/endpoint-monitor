@@ -6,7 +6,7 @@ import (
 
 	"github.com/opsgenie/opsgenie-go-sdk/alertsv2"
 	ogcli "github.com/opsgenie/opsgenie-go-sdk/client"
-	"github.com/patdaman/endpoint-monitor/model"
+	"github.com/patdaman/endpoint-monitor/src/model"
 )
 
 type OpsgenieNotify struct {
