@@ -6,16 +6,20 @@
 FROM golang
 
 # Copy the local package files to the container's workspace.
-# ADD . /go/src/github.com/patdaman/endpoint-monitor
-ADD . /
+# ADD . C://go/src/github.com/patdaman/endpoint-monitor
+# ADD . /go/src
 
-# Build the outyet command inside the container.
-RUN go get github.com/patdaman/endpoint-monitor@development
+# Get / Update command inside the container.
+# RUN go get -u
+# RUN go get -u ./
+# RUN go get github.com/patdaman/endpoint-monitor@development
+RUN go get github.com/patdaman/endpoint-monitor
 # RUN go install https://github.com/patdaman/endpoint-monitor@development
 # RUN go install
 
-RUN go build -o main /github.com/patdaman/endpoint-monitor@development
-
+# Build the outyet command inside the container.
+# RUN go build -o main /github.com/patdaman/endpoint-monitor@development
+RUN go build -o main /go/src/github.com/patdaman/endpoint-monitor/src
 # ENTRYPOINT /go/bin/endpoint-monitor --config /go/src/github.com/patdaman/endpoint-monitor/config.json
 ENTRYPOINT /go/bin/endpoint-monitor --config ./quest_monitoring.json
 

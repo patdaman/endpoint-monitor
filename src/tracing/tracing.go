@@ -6,12 +6,12 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Sirupsen/logrus"
 	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
 	zipkinot "github.com/openzipkin-contrib/zipkin-go-opentracing"
 	"github.com/openzipkin/zipkin-go"
 	zipkinhttp "github.com/openzipkin/zipkin-go/reporter/http"
+	"github.com/sirupsen/logrus"
 )
 
 // Tracer instance

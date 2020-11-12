@@ -7,9 +7,9 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/patdaman/endpoint-monitor/src/model"
 	"github.com/patdaman/endpoint-monitor/src/notify"
+	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -29,31 +29,31 @@ var (
 	isLoggingEnabled = false
 )
 
-type RequestInfo struct {
-	Id           int
-	Url          string
-	RequestType  string
-	ResponseCode int
-	// ResponseBody         string
-	ResponseTime         int64
-	ExpectedResponseTime int64
-}
+// type RequestInfo struct {
+// 	Id           int
+// 	Url          string
+// 	RequestType  string
+// 	ResponseCode int
+// 	// ResponseBody         string
+// 	ResponseTime         int64
+// 	ExpectedResponseTime int64
+// }
 
-type ErrorInfo struct {
-	Id           int
-	Url          string
-	RequestType  string
-	ResponseCode int
-	// ResponseBody string
-	Reason    error
-	OtherInfo string
-}
+// type ErrorInfo struct {
+// 	Id           int
+// 	Url          string
+// 	RequestType  string
+// 	ResponseCode int
+// 	// ResponseBody string
+// 	Reason    error
+// 	OtherInfo string
+// }
 
 type Database interface {
 	Initialize() error
 	GetDatabaseName() string
-	AddRequestInfo(requestInfo RequestInfo) error
-	AddErrorInfo(errorInfo ErrorInfo) error
+	AddRequestInfo(requestInfo model.RequestInfo) error
+	AddErrorInfo(errorInfo model.ErrorInfo) error
 }
 
 type DatabaseTypes struct {
@@ -125,10 +125,10 @@ func addTestErrorAndRequestInfo() {
 	println("Adding Test data to your database ....")
 
 	// requestInfo := RequestInfo{0, "http://test.com", "GET", 0, "", 0, 0}
-	requestInfo := RequestInfo{0, "http://test.com", "GET", 0, 0, 0}
+	requestInfo := model.RequestInfo{0, "http://test.com", "GET", 0, 0, 0, 0, "response body", "expected response body"}
 
 	// errorInfo := ErrorInfo{0, "http://test.com", "GET", 0, "test response", errors.New("test error"), "test other info"}
-	errorInfo := ErrorInfo{0, "http://test.com", "GET", 0, errors.New("test error"), "test other info"}
+	errorInfo := model.ErrorInfo{0, "http://test.com", "GET", 0, "this is the body", errors.New("test error"), "test other info"}
 
 	for _, db := range dbList {
 		reqErr := db.AddRequestInfo(requestInfo)
@@ -147,7 +147,7 @@ func addTestErrorAndRequestInfo() {
 
 // Function called by requests package when request was successfull
 // Request data is inserted to all registered databases
-func AddRequestInfo(requestInfo RequestInfo) {
+func AddRequestInfo(requestInfo model.RequestInfo) {
 	logRequestInfo(requestInfo)
 
 	//Insert to all databses
@@ -182,7 +182,7 @@ func AddRequestInfo(requestInfo RequestInfo) {
 
 // Called by requests package when a request fails
 // Error Information inserted to all registered databases
-func AddErrorInfo(errorInfo ErrorInfo) {
+func AddErrorInfo(errorInfo model.ErrorInfo) {
 	logErrorInfo(errorInfo)
 
 	// Request failed send notification
@@ -274,7 +274,7 @@ func EnableLogging(fileName string) {
 
 }
 
-func logErrorInfo(errorInfo ErrorInfo) {
+func logErrorInfo(errorInfo model.ErrorInfo) {
 
 	if isLoggingEnabled {
 		logrus.WithFields(logrus.Fields{
@@ -290,7 +290,7 @@ func logErrorInfo(errorInfo ErrorInfo) {
 
 }
 
-func logRequestInfo(requestInfo RequestInfo) {
+func logRequestInfo(requestInfo model.RequestInfo) {
 
 	if isLoggingEnabled {
 		logrus.WithFields(logrus.Fields{

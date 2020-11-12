@@ -8,10 +8,10 @@ import (
 
 	"context"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/patdaman/endpoint-monitor/src/dbclient"
 	"github.com/patdaman/endpoint-monitor/src/model"
 	"github.com/patdaman/endpoint-monitor/src/tracing"
+	"github.com/sirupsen/logrus"
 
 	"github.com/gorilla/mux"
 )

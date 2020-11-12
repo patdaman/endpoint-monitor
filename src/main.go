@@ -11,10 +11,9 @@ import (
 	"time"
 
 	// "github.com/gorilla/mux"
-	database "github.com/patdaman/endpoint-monitor/src/metrics"
+	"github.com/patdaman/endpoint-monitor/src/database"
 	"github.com/patdaman/endpoint-monitor/src/notify"
 	"github.com/patdaman/endpoint-monitor/src/requests"
-	httpSwagger "github.com/swaggo/src/http-swagger"
 
 	// "github.com/urfave/cli"
 	// "database"

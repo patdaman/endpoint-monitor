@@ -1,4 +1,4 @@
-module endpoint-monitor
+module github.com/patdaman/endpoint-monitor
 
 go 1.15
 
@@ -19,6 +19,7 @@ require (
 	github.com/swaggo/swag v1.6.9 // indirect
 	github.com/urfave/cli v1.22.5
 	golang.org/x/net v0.0.0-20201110031124-69a78807bb2b // indirect
+	golang.org/x/sys v0.0.0-20201110211018-35f3e6cf4a65 // indirect
 	golang.org/x/text v0.3.4 // indirect
-	golang.org/x/tools v0.0.0-20201111133315-69daaf961d65 // indirect
+	golang.org/x/tools v0.0.0-20201111224557-41a3a589386c // indirect
 )
