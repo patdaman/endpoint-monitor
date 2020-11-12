@@ -1,11 +1,11 @@
 {
 	"database": {
 		"influxDb": {
-			"host": "localhost",
+			"host": "influxdb",
 			"port": 8086,
 			"databaseName": "Monitoring",
-			"username": "",
-			"password": ""
+			"username": "UXVlc3RBZG1pbg==",
+			"password": "UXVlc3Q0U3VjY2Vzcw=="
 		}
 	},
 	"requests": [
@@ -21,7 +21,7 @@
 			"responseTime": 5000
 		},
 		{
-			"url": "https://questanalytics.com/app/v1.0/",
+			"url": "https://questanalytics.com/app/v1.0/healthz",
 			"requestType": "GET",
 			"headers": {},
 			"urlParams": {
@@ -32,7 +32,7 @@
 			"responseTime": 5000
 		},
 		{
-			"url": "https://api.questanalytics.com",
+			"url": "https://api.questanalytics.com/healthz",
 			"requestType": "GET",
 			"headers": {},
 			"params": {},
@@ -41,7 +41,7 @@
 			"responseTime": 5000
 		},
 		{
-			"url": "https://omnius-custom.azurewebsites.net/app/v2.0/healthz",
+			"url": "https://questanalytics.com/app/v2.0/healthz",
 			"requestType": "GET",
 			"headers": {},
 			"params": {},
@@ -68,7 +68,7 @@
 			"responseTime": 5000
 		},
 		{
-			"url": "https://custom15.azurewebsites.net/app/v2.0/healthz",
+			"url": "https://sit.questanalytics.com/app/v1.0/healthz",
 			"requestType": "GET",
 			"headers": {},
 			"params": {},
@@ -77,7 +77,7 @@
 			"responseTime": 5000
 		},
 		{
-			"url": "https://custom15-api.azurewebsites.net/v2.0/healthz",
+			"url": "https://sit-api.questanalytics.com/healthz",
 			"requestType": "GET",
 			"headers": {},
 			"params": {},
@@ -86,7 +86,7 @@
 			"responseTime": 5000
 		},
 		{
-			"url": "https://sit.questanalytics.com",
+			"url": "https://sit-api.questanalytics.com/app/v2.0/healthz",
 			"requestType": "GET",
 			"headers": {},
 			"params": {},
@@ -95,7 +95,7 @@
 			"responseTime": 5000
 		},
 		{
-			"url": "https://sit.questanalytics.com/app/v1.0/",
+			"url": "https://sit-api.questanalytics.com/v2.0/healthz",
 			"requestType": "GET",
 			"headers": {},
 			"params": {},
@@ -104,43 +104,7 @@
 			"responseTime": 5000
 		},
 		{
-			"url": "https://questsit-api.azurewebsites.net",
-			"requestType": "GET",
-			"headers": {},
-			"params": {},
-			"checkEvery": 600,
-			"responseCode": 200,
-			"responseTime": 5000
-		},
-		{
-			"url": "https://questsit-custom.azurewebsites.net/app/v2.0/healthz",
-			"requestType": "GET",
-			"headers": {},
-			"params": {},
-			"checkEvery": 600,
-			"responseCode": 200,
-			"responseTime": 5000
-		},
-		{
-			"url": "https://questsit-custom-api.azurewebsites.net/v2.0/healthz",
-			"requestType": "GET",
-			"headers": {},
-			"params": {},
-			"checkEvery": 600,
-			"responseCode": 200,
-			"responseTime": 5000
-		},
-		{
-			"url": "https://omniusquest01.blob.core.windows.net",
-			"requestType": "GET",
-			"headers": {},
-			"params": {},
-			"checkEvery": 60,
-			"responseCode": 400,
-			"responseTime": 5000
-		},
-		{
-			"url": "https://omnius-kv.vault.azure.net",
+			"url": "https://prod-kv-qes-w.vault.azure.net",
 			"requestType": "GET",
 			"headers": {},
 			"params": {},
@@ -162,7 +126,7 @@
 			"requestType": "GET",
 			"headers": {},
 			"params": {},
-			"checkEvery": 40,
+			"checkEvery": 300,
 			"responseCode": 200,
 			"responseTime": 5000
 		},
@@ -180,7 +144,7 @@
 			"requestType": "GET",
 			"headers": {},
 			"params": {},
-			"checkEvery": 60,
+			"checkEvery": 120,
 			"responseCode": 200,
 			"responseTime": 10000
 		},
