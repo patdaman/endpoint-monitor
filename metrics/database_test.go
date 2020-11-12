@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/patdaman/endpoint-monitor/src/model"
+	"github.com/patdaman/endpoint-monitor/model"
 )
 
 func TestInitialize(t *testing.T) {

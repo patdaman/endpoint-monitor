@@ -10,7 +10,7 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/patdaman/endpoint-monitor/src/model"
+	"github.com/patdaman/endpoint-monitor/model"
 )
 
 const (

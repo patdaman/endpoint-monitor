@@ -3,7 +3,7 @@ package dbclient
 import (
 	"context"
 
-	"github.com/patdaman/endpoint-monitor/src/model"
+	"github.com/patdaman/endpoint-monitor/model"
 	"github.com/stretchr/testify/mock"
 )
 

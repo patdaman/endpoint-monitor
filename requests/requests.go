@@ -13,8 +13,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/patdaman/endpoint-monitor/src/database"
-	"github.com/patdaman/endpoint-monitor/src/model"
+	"github.com/patdaman/endpoint-monitor/database"
+	"github.com/patdaman/endpoint-monitor/model"
 )
 
 var (

@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/patdaman/endpoint-monitor/src/model"
+	"github.com/patdaman/endpoint-monitor/model"
 )
 
 type SlackNotify struct {

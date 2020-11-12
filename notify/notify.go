@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/patdaman/endpoint-monitor/src/model"
+	"github.com/patdaman/endpoint-monitor/model"
 )
 
 // Diffrent types of clients to deliver model.Notifications

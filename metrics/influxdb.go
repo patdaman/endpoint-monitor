@@ -9,7 +9,7 @@ import (
 	"time"
 
 	client "github.com/influxdata/influxdb1-client/v2"
-	"github.com/patdaman/endpoint-monitor/src/model"
+	"github.com/patdaman/endpoint-monitor/model"
 )
 
 type InfluxDb struct {

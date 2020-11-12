@@ -11,9 +11,9 @@ import (
 	"time"
 
 	// "github.com/gorilla/mux"
-	"github.com/patdaman/endpoint-monitor/src/database"
-	"github.com/patdaman/endpoint-monitor/src/notify"
-	"github.com/patdaman/endpoint-monitor/src/requests"
+	"github.com/patdaman/endpoint-monitor/database"
+	"github.com/patdaman/endpoint-monitor/notify"
+	"github.com/patdaman/endpoint-monitor/requests"
 
 	// "github.com/urfave/cli"
 	// "database"

@@ -8,9 +8,9 @@ import (
 
 	"context"
 
-	"github.com/patdaman/endpoint-monitor/src/dbclient"
-	"github.com/patdaman/endpoint-monitor/src/model"
-	"github.com/patdaman/endpoint-monitor/src/tracing"
+	"github.com/patdaman/endpoint-monitor/dbclient"
+	"github.com/patdaman/endpoint-monitor/model"
+	"github.com/patdaman/endpoint-monitor/tracing"
 	"github.com/sirupsen/logrus"
 
 	"github.com/gorilla/mux"

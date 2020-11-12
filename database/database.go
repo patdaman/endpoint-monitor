@@ -7,8 +7,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/patdaman/endpoint-monitor/src/model"
-	"github.com/patdaman/endpoint-monitor/src/notify"
+	"github.com/patdaman/endpoint-monitor/model"
+	"github.com/patdaman/endpoint-monitor/notify"
 	"github.com/sirupsen/logrus"
 )
 
@@ -20,14 +20,34 @@ var (
 	responseMean map[int][]int64
 	dbMain       Database
 
-	// ErrResposeCode   = errors.New("Response code does not Match expected value")
-	// ErrResposeBody   = errors.New("Response body does not match expected value")
-	// ErrTimeout       = errors.New("Request Time out Error")
-	// ErrCreateRequest = errors.New("Invalid Request Config. Not able to create request")
-	// ErrDoRequest     = errors.New("Request failed")
+	ErrResposeCode   = errors.New("Response code does not Match expected value")
+	ErrResposeBody   = errors.New("Response body does not match expected value")
+	ErrTimeout       = errors.New("Request Time out Error")
+	ErrCreateRequest = errors.New("Invalid Request Config. Not able to create request")
+	ErrDoRequest     = errors.New("Request failed")
 
 	isLoggingEnabled = false
 )
+
+// type RequestInfo struct {
+// 	Id           int
+// 	Url          string
+// 	RequestType  string
+// 	ResponseCode int
+// 	// ResponseBody         string
+// 	ResponseTime         int64
+// 	ExpectedResponseTime int64
+// }
+
+// type ErrorInfo struct {
+// 	Id           int
+// 	Url          string
+// 	RequestType  string
+// 	ResponseCode int
+// 	// ResponseBody string
+// 	Reason    error
+// 	OtherInfo string
+// }
 
 type Database interface {
 	Initialize() error
@@ -87,14 +107,41 @@ func AddNew(databaseTypes DatabaseTypes) {
 			println("Failed to Intialize Database ")
 			os.Exit(3)
 		}
+
 	}
 
 	// Set first database as primary
 	if len(dbList) != 0 {
 		dbMain = dbList[0]
-		AddTestErrorAndRequestInfo()
+		addTestErrorAndRequestInfo()
 	} else {
 		fmt.Println("No Database selected.")
+	}
+}
+
+// Insert test data to database
+func addTestErrorAndRequestInfo() {
+
+	println("Adding Test data to your database ....")
+
+	// requestInfo := RequestInfo{0, "http://test.com", "GET", 0, "", 0, 0}
+	requestInfo := model.RequestInfo{0, "http://test.com", "GET", 0, 0, 0, 0, "response body", "expected response body"}
+
+	// errorInfo := ErrorInfo{0, "http://test.com", "GET", 0, "test response", errors.New("test error"), "test other info"}
+	errorInfo := model.ErrorInfo{0, "http://test.com", "GET", 0, "this is the body", errors.New("test error"), "test other info"}
+
+	for _, db := range dbList {
+		reqErr := db.AddRequestInfo(requestInfo)
+		if reqErr != nil {
+			println(db.GetDatabaseName, ": Failed to insert Request Info to database. Please check whether database is installed properly")
+		}
+
+		errErr := db.AddErrorInfo(errorInfo)
+
+		if errErr != nil {
+			println(db.GetDatabaseName, ": Failed to insert Error Info to database. Please check whether database is installed properly")
+		}
+
 	}
 }
 
@@ -117,14 +164,20 @@ func AddRequestInfo(requestInfo model.RequestInfo) {
 	if meanErr == nil {
 		if mean > requestInfo.ExpectedResponseTime {
 			clearQueue(requestInfo.Id)
-			// notify.SendResponseTimeNotification(notify.ResponseTimeNotification{
+			notify.SendResponseTimeNotification(model.ResponseTimeNotification{
+				Url:                  requestInfo.Url,
+				RequestType:          requestInfo.RequestType,
+				ExpectedResponsetime: requestInfo.ExpectedResponseTime,
+				MeanResponseTime:     mean})
+			// notify.SendNotification(model.Notification{
 			// 	Url:                  requestInfo.Url,
+			// 	NotificationType:     "ResponseTime",
 			// 	RequestType:          requestInfo.RequestType,
-			// 	ExpectedResponsetime: requestInfo.ExpectedResponseTime,
+			// 	ExpectedResponseTime: requestInfo.ExpectedResponseTime,
 			// 	MeanResponseTime:     mean})
-			notify.SendNotification(getNotificationObject(requestInfo))
 		}
 	}
+
 }
 
 // Called by requests package when a request fails
@@ -166,11 +219,13 @@ func addResponseTimeToRequest(id int, responseTime int64) {
 func getMeanResponseTimeOfUrl(id int) (int64, error) {
 
 	queue := responseMean[id]
+
 	if len(queue) < MeanResponseCount {
 		return 0, errors.New("Count has not been reached")
 	}
 
 	var sum int64
+
 	for _, val := range queue {
 		sum = sum + val
 	}
@@ -216,6 +271,7 @@ func EnableLogging(fileName string) {
 
 		logrus.SetOutput(f)
 	}
+
 }
 
 func logErrorInfo(errorInfo model.ErrorInfo) {
@@ -246,59 +302,5 @@ func logRequestInfo(requestInfo model.RequestInfo) {
 			"expectedResponseTime": requestInfo.ExpectedResponseTime,
 			// "responseBody":         requestInfo.ResponseBody,
 		}).Info("")
-	}
-}
-
-func getNotificationObject(requestInfo model.RequestInfo) model.Notification {
-	notificationObject := model.Notification{
-		Url:                  requestInfo.Url,
-		RequestType:          requestInfo.RequestType,
-		ExpectedResponseTime: requestInfo.ExpectedResponseTime,
-		ResponseTime:         requestInfo.ResponseTime,
-		ExpectedResponseCode: requestInfo.ExpectedResponseCode,
-		ResponseCode:         requestInfo.ResponseCode,
-	}
-	return notificationObject
-}
-
-// Insert test data to database
-func AddTestErrorAndRequestInfo() {
-
-	println("Adding Test data to your database ....")
-
-	// requestInfo := RequestInfo{0, "http://test.com", "GET", 0, "", 0, 0}
-	requestInfo := model.RequestInfo{
-		Id:                   0,
-		Url:                  "http://test.com",
-		RequestType:          "GET",
-		ResponseCode:         0,
-		ExpectedResponseCode: 200,
-		ResponseTime:         0,
-		ExpectedResponseTime: 0,
-		ResponseBody:         "",
-		ExpectedResponseBody: "",
-	}
-
-	// errorInfo := ErrorInfo{0, "http://test.com", "GET", 0, "test response", errors.New("test error"), "test other info"}
-	errorInfo := model.ErrorInfo{
-		Id:           0,
-		Url:          "http://test.com",
-		RequestType:  "GET",
-		ResponseCode: 0,
-		Reason:       errors.New("test error"),
-		OtherInfo:    "test other info"}
-
-	for _, db := range dbList {
-		reqErr := db.AddRequestInfo(requestInfo)
-		if reqErr != nil {
-			println(db.GetDatabaseName, ": Failed to insert Request Info to database. Please check whether database is installed properly")
-		}
-
-		errErr := db.AddErrorInfo(errorInfo)
-
-		if errErr != nil {
-			println(db.GetDatabaseName, ": Failed to insert Error Info to database. Please check whether database is installed properly")
-		}
-
 	}
 }
